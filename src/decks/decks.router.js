@@ -10,6 +10,6 @@ router
     .route("/:deck_id")
     .get(controller.read)
     .put(controller.update)
-    // .delete(controller.destroy)
+    .delete(controller.delete)
 
 module.exports = router;
