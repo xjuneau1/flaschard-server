@@ -28,7 +28,7 @@ async function cardExists(req, res, next) {
 }
 
 function read(req, res, next) {
-  res.status(200).json({ data: res.locals.card });
+  res.status(200).json(res.locals.card);
 }
 
 const VALID_PROPERTIES = ["front", "back"];
@@ -50,19 +50,13 @@ function hasOnlyValidProperties(req, res, next) {
 }
 
 async function create(req, res, next) {
-  console.log(req.body)
   const createdCard = await service.create(req.body);
   res.status(201).json(createdCard);
 }
 
 async function update(req, res, next) {
-  const { card_id } = res.locals.card;
-  const updatedCard = {
-    ...req.body.data,
-    card_id: card_id,
-  };
-  const updatedRecord = await service.update(updatedCard);
-  res.json({ data: updatedRecord });
+  const updatedRecord = await service.update(req.body);
+  res.json(updatedRecord);
 }
 
 async function destroy(req, res, next){

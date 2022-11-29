@@ -31,7 +31,9 @@ function create(card){
     return knex("cards")
     .insert(card)
     .returning("*")
-    .then((createdRecords)=> createdRecords[0])
+    .then((createdRecords)=> {
+        return createdRecords[0]
+    })
 }
 
 function getCardsByDeckId(deck_id){
