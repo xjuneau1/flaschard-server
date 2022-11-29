@@ -12,7 +12,11 @@ module.exports = {
     },
     seeds: {
      directory: path.join(__dirname, "src", "db", "seeds")
-    }
+    },
+    pool: {
+      min: 0,
+      max: 40
+    },
   },
 
   production: {
@@ -23,8 +27,8 @@ module.exports = {
       password: 'password'
     },
     pool: {
-      min: 2,
-      max: 10
+      min: 0,
+      max: 40
     },
     migrations: {
       tableName: 'knex_migrations'

@@ -11,15 +11,15 @@ async function list(req, res) {
     const cards = await cardsService.getCardsByDeckId(deck.deck_id);
     decksWithCards.push({ ...deck, cards: cards });
   }
-  res.status(200).json({data: decksWithCards});
+  res.status(200).json(decksWithCards);
 }
 
 const VALID_PROPERTIES = ["name", "description"];
 
 function hasOnlyValidProperties(req, res, next) {
-  const { data = {} } = req.body;
+  const { body = {} } = req;
 
-  const invalidFields = Object.keys(data).filter(
+  const invalidFields = Object.keys(body).filter(
     (field) => !VALID_PROPERTIES.includes(field)
   );
 
@@ -33,8 +33,8 @@ function hasOnlyValidProperties(req, res, next) {
 }
 
 async function create(req, res) {
-  const newDeck = await service.create(req.body.data);
-  res.status(201).json({data: newDeck});
+  const newDeck = await service.create(req.body);
+  res.status(201).json(newDeck);
 }
 
 async function deckExists(req, res, next) {
@@ -52,13 +52,13 @@ async function deckExists(req, res, next) {
 async function read(req, res) {
   const { deck } = res.locals;
   const cards = await cardsService.getCardsByDeckId(deck.deck_id);
-  res.json({data: { ...deck, cards: cards }});
+  res.json({ ...deck, cards: cards });
 }
 
 async function update(req, res) {
   const { deck_id } = res.locals.deck;
   const updatedDeck = {
-    ...req.body.data,
+    ...req.body,
     deck_id: deck_id,
   };
   const updatedRecord = await service.update(updatedDeck);

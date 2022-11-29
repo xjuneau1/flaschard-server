@@ -3,17 +3,17 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../validation/hasProperties");
 const hasRequiredProperties = hasProperties("front", "back");
 
-async function list(req, res, next) {
-  const cards = await service.list();
-  if (cards) {
-    res.locals.cards = cards;
-    return next();
-  }
-  next({
-    status: 404,
-    message: "No cards found, or no cards have been created yet.",
-  });
-}
+// async function list(req, res, next) {
+//   const cards = await service.list();
+//   if (cards) {
+//     res.locals.cards = cards;
+//     return next();
+//   }
+//   next({
+//     status: 404,
+//     message: "No cards found, or no cards have been created yet.",
+//   });
+// }
 
 async function cardExists(req, res, next) {
   const card = await service.read(req.params.card_id);
@@ -34,9 +34,9 @@ function read(req, res, next) {
 const VALID_PROPERTIES = ["front", "back"];
 
 function hasOnlyValidProperties(req, res, next) {
-  const { data = {} } = req.body;
+  const { body = {} } = req;
 
-  const invalidFields = Object.keys(data).filter(
+  const invalidFields = Object.keys(body).filter(
     (field) => !VALID_PROPERTIES.includes(field)
   );
 
@@ -50,13 +50,9 @@ function hasOnlyValidProperties(req, res, next) {
 }
 
 async function create(req, res, next) {
-  const { cards } = res.locals;
-  const newCard = {
-    ...req.body.data,
-    card_id: cards.length + 1,
-  };
-  const createdCard = await service.create(newCard);
-  res.status(201).json({ data: createdCard });
+  console.log(req.body)
+  const createdCard = await service.create(req.body);
+  res.status(201).json(createdCard);
 }
 
 async function update(req, res, next) {
@@ -78,9 +74,8 @@ async function destroy(req, res, next){
 module.exports = {
   read: [asyncErrorBoundary(cardExists), read],
   create: [
-    hasRequiredProperties,
-    hasOnlyValidProperties,
-    asyncErrorBoundary(list),
+    //hasRequiredProperties,
+    //hasOnlyValidProperties,
     asyncErrorBoundary(create),
   ],
   update: [asyncErrorBoundary(cardExists), asyncErrorBoundary(update)],
